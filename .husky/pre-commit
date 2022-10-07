@@ -1,0 +1,18 @@
+
+
+#!/usr/bin/env sh
+
+. "$(dirname "$0")/_/husky.sh"
+
+COMMAND="yarn"
+
+if ! [ -x "$(command -v $COMMAND)" ]; then
+  COMMAND="npm"
+
+  if ! [ -x "$(command -v $COMMAND)" ]; then
+    echo 'Neither yarn nor npm could be found, skipping pre-commit' 1>&2
+    exit 0
+  fi
+fi
+
+"$COMMAND" run lint-staged && "$COMMAND" test --verbose
