@@ -12,7 +12,7 @@ import { getColorAndLabels } from 'utils/getColorAndLabels';
 import { MapText } from '@components/MapText/MapText';
 import { Box, ReStyleThemeProvider } from '@styles/theme';
 
-import mocks from './mocks/mocks.json';
+import ecowatt from './file/ecowatt.json';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -33,13 +33,11 @@ export default function App() {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
-  const res = mocks;
-
-  console.log('res', res);
-  const computedCurrentSituation = getComputedCurrentSituation(res);
+  const computedCurrentSituation = getComputedCurrentSituation(ecowatt);
   const { title, description, color } = getColorAndLabels(
     computedCurrentSituation
   );
+  const lastUpdatedDate = ecowatt.signals[0]?.GenerationFichier;
 
   if (!fontsLoaded) {
     return null;
@@ -52,10 +50,15 @@ export default function App() {
     >
       <ReStyleThemeProvider>
         <Box flex={1} backgroundColor="primary">
-          <MapText title={title} description={description} color={color} />
+          <MapText
+            title={title}
+            description={description}
+            color={color}
+            date={lastUpdatedDate}
+          />
 
           <Box flex={0.6} alignItems="center">
-            <SvgFrance color="red" />
+            <SvgFrance color={color} />
           </Box>
         </Box>
       </ReStyleThemeProvider>
