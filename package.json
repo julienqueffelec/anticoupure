@@ -10,7 +10,8 @@
     "test": "jest",
     "lint": "eslint --ignore-path .gitignore .",
     "lint:fix": "eslint . --fix",
-    "prettier": "prettier --write '*.tsx'"
+    "prettier": "prettier --write '*.tsx'",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [

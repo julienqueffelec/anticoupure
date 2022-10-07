@@ -15,4 +15,4 @@ if ! [ -x "$(command -v $COMMAND)" ]; then
   fi
 fi
 
-"$COMMAND" run lint-staged && "$COMMAND" test --verbose
+"$COMMAND" run lint-staged 
