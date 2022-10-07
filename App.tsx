@@ -1,19 +1,58 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import SvgFrance from '@assets/france';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useCallback, useEffect } from 'react';
+import {
+  SafeAreaProvider,
+  initialWindowMetrics
+} from 'react-native-safe-area-context';
+
+import { Box, ReStyleThemeProvider, Text } from '@styles/theme';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    'Nunito-Black': require('./assets/fonts/Nunito-Black.ttf')
+  });
+
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider
+      initialMetrics={initialWindowMetrics}
+      onLayout={onLayoutRootView}
+    >
+      <ReStyleThemeProvider>
+        <Box flex={1} backgroundColor="primary">
+          <Box flex={0.4} justifyContent="center" alignItems="center">
+            <Text variant="title1" color="secondary">
+              Tout va bien
+            </Text>
+            <Text variant="title1" color="secondary">
+              Ne paniquez pas
+            </Text>
+          </Box>
+
+          <Box flex={0.6} alignItems="center">
+            <SvgFrance />
+          </Box>
+        </Box>
+      </ReStyleThemeProvider>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center'
-  }
-});
