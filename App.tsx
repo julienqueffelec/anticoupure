@@ -6,6 +6,8 @@ import {
   SafeAreaProvider,
   initialWindowMetrics
 } from 'react-native-safe-area-context';
+import { getComputedCurrentSituation } from 'utils/computedCurrentSituation';
+import { getColorAndLabels } from 'utils/getColorAndLabels';
 
 import { MapText } from '@components/MapText/MapText';
 import { Box, ReStyleThemeProvider } from '@styles/theme';
@@ -34,6 +36,10 @@ export default function App() {
   const res = mocks;
 
   console.log('res', res);
+  const computedCurrentSituation = getComputedCurrentSituation(res);
+  const { title, description, color } = getColorAndLabels(
+    computedCurrentSituation
+  );
 
   if (!fontsLoaded) {
     return null;
@@ -46,7 +52,7 @@ export default function App() {
     >
       <ReStyleThemeProvider>
         <Box flex={1} backgroundColor="primary">
-          <MapText title="title" description="description" status="status" />
+          <MapText title={title} description={description} color={color} />
 
           <Box flex={0.6} alignItems="center">
             <SvgFrance color="red" />
