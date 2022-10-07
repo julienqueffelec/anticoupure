@@ -10,6 +10,7 @@ import { getComputedCurrentSituation } from 'utils/computedCurrentSituation';
 import { getColorAndLabels } from 'utils/getColorAndLabels';
 
 import { MapText } from '@components/MapText/MapText';
+import TimelineHours from '@components/TimelineHours/TimelineHours';
 import { Box, ReStyleThemeProvider } from '@styles/theme';
 
 import ecowatt from './file/ecowatt.json';
@@ -56,6 +57,8 @@ export default function App() {
             color={color}
             date={lastUpdatedDate}
           />
+
+          <TimelineHours />
 
           <Box flex={0.6} alignItems="center">
             <SvgFrance color={color} />

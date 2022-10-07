@@ -3,8 +3,9 @@ export const getColorAndLabels = (
 ): { title: string; description: string; color: string } => {
   if (number === 3) {
     return {
-      title: 'Coupure en cours',
-      description: 'Le réseau est perturbé',
+      title: 'Système électrique très tendu',
+      description:
+        'Coupures inévitables si nous ne baissons pas notre consommation',
       color: 'red'
     };
   }
