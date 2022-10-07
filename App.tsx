@@ -7,11 +7,15 @@ import {
   initialWindowMetrics
 } from 'react-native-safe-area-context';
 
-import { Box, ReStyleThemeProvider, Text } from '@styles/theme';
+import { MapText } from '@components/MapText/MapText';
+import { Box, ReStyleThemeProvider } from '@styles/theme';
+
+import mocks from './mocks/mocks.json';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    'Nunito-Black': require('./assets/fonts/Nunito-Black.ttf')
+    'Nunito-Black': require('./assets/fonts/Nunito-Black.ttf'),
+    'Nunito-Regular': require('./assets/fonts/Nunito-Regular.ttf')
   });
 
   useEffect(() => {
@@ -27,6 +31,9 @@ export default function App() {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
+  const res = mocks;
+
+  console.log('res', res);
 
   if (!fontsLoaded) {
     return null;
@@ -39,17 +46,10 @@ export default function App() {
     >
       <ReStyleThemeProvider>
         <Box flex={1} backgroundColor="primary">
-          <Box flex={0.4} justifyContent="center" alignItems="center">
-            <Text variant="title1" color="secondary">
-              Tout va bien
-            </Text>
-            <Text variant="title1" color="secondary">
-              Ne paniquez pas
-            </Text>
-          </Box>
+          <MapText title="title" description="description" status="status" />
 
           <Box flex={0.6} alignItems="center">
-            <SvgFrance />
+            <SvgFrance color="red" />
           </Box>
         </Box>
       </ReStyleThemeProvider>

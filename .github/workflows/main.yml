@@ -1,0 +1,47 @@
+name: Lint, Jest on push
+
+on:
+  push:
+    branches:
+      - '*' # matches every branch
+      - '!develop' # excludes beta
+
+jobs:
+  test-lint:
+    name: Test - Lint 🦾
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
+
+  test-ts:
+    name: Typescript Check 👊
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - run: yarn install --frozen-lockfile
+
+      - name: TSC
+        run: yarn tsc --noEmit

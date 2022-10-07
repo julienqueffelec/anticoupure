@@ -14,16 +14,21 @@ export const aspectRatio = width / 375;
 
 export const palette = {
   primary: '#04070E',
-  secondary: '#0ECA17',
-  tertiary: '#F9F9FA'
+  green: '#0ECA18',
+  tertiary: '#F9F9FA',
+  white: '#fff',
+  orange: 'orange',
+  red: 'red'
 };
 
 const theme = {
   colors: {
     primary: palette.primary,
-    secondary: palette.secondary,
     tertiary: palette.tertiary,
-    white: '#fff'
+    white: palette.white,
+    green: palette.green,
+    orange: palette.orange,
+    red: palette.red
   },
   spacing: {
     xxs: 2,
@@ -45,28 +50,31 @@ const theme = {
   textVariants: {
     hero: {
       fontSize: 40,
-      color: palette.white,
+      color: 'white',
       textAlign: 'center'
     },
     title1: {
       fontSize: 28,
-      color: palette.white,
+      color: 'white',
       fontFamily: 'Nunito-Black'
     },
     title2: {
       fontSize: 24,
       lineHeight: 30,
-      color: palette.white
+      color: 'white',
+      fontFamily: 'Nunito-Black'
     },
     title3: {
       fontSize: 16,
       lineHeight: 24,
-      color: 'text'
+      color: 'white',
+      fontFamily: 'Nunito-Black'
     },
     body: {
       fontSize: 14,
       lineHeight: 24,
-      color: 'text'
+      color: 'white',
+      fontFamily: 'Nunito-Regular'
     },
     danger: {
       fontSize: 14,
@@ -77,23 +85,26 @@ const theme = {
       fontSize: 14,
       lineHeight: 24,
       textTransform: 'uppercase',
-      color: 'text'
+      color: 'white',
+      fontFamily: 'Nunito-Regular'
     },
     bodyBold: {
       fontSize: 14,
       lineHeight: 24,
-      color: 'text'
+      color: 'white',
+      fontFamily: 'Nunito-Bold'
     },
     button: {
       fontSize: 13,
       color: 'text',
       textAlign: 'center',
-      textTransform: 'uppercase'
+      textTransform: 'uppercase',
+      fontFamily: 'Nunito-Bold'
     },
     header: {
       fontSize: 12,
       lineHeight: 24,
-      color: 'secondary'
+      color: 'green'
     }
   },
   breakpoints: {
