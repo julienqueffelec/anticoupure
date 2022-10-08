@@ -9,24 +9,36 @@ interface DayProps {
   isActive: boolean;
   onPress: (e: number) => void;
   index: number;
+  color: string;
 }
 
-export const Day: React.FC<DayProps> = ({ day, isActive, onPress, index }) => {
-  const result = format(new Date(day), 'PP', {
+export const Day: React.FC<DayProps> = ({
+  day,
+  isActive,
+  onPress,
+  index,
+  color
+}) => {
+  const month = format(new Date(day), 'MMM', {
+    locale: fr
+  });
+  const formattedDay = format(new Date(day), 'd', {
     locale: fr
   });
 
   return (
     <TouchableOpacity onPress={() => onPress(index)}>
       <Box
-        height={60}
-        backgroundColor="green"
-        borderRadius="m"
+        padding="m"
+        backgroundColor={color as any}
+        borderRadius="l"
         alignItems="center"
         justifyContent="center"
         opacity={isActive ? 1 : 0.6}
       >
-        <Text variant="title3">{result}</Text>
+        <Text variant="title3">
+          {formattedDay} {month}
+        </Text>
       </Box>
     </TouchableOpacity>
   );

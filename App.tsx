@@ -1,7 +1,8 @@
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView } from 'react-native';
+import { ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -20,6 +21,7 @@ import { Box, ReStyleThemeProvider } from './styles/theme';
 export default function App() {
   const [selectedDay, setSelectedDay] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [ecowatt, setEcowatt] = useState<EcoWatt>();
   const [fontsLoaded] = useFonts({
     'Nunito-Black': require('./assets/fonts/Nunito-Black.ttf'),
@@ -59,17 +61,28 @@ export default function App() {
   const lastUpdatedDate = ecowatt?.signals[selectedDay]?.GenerationFichier;
   const days = ecowatt && getDays(ecowatt);
   const hours = ecowatt && ecowatt?.signals[selectedDay]?.values;
+  const wait = (timeout: number) =>
+    new Promise(resolve => setTimeout(resolve, timeout));
 
   const onPress = (selectedDay: number) => {
     setSelectedDay(selectedDay);
   };
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetch(
+      'https://raw.githubusercontent.com/julienqueffelec/anticoupure/main/ecowatt.json'
+    ).then(response => {
+      response.json().then(data => {
+        setEcowatt(data);
+
+        wait(1000).then(() => setRefreshing(false));
+      });
+    });
+  }, []);
+
   if (!fontsLoaded) {
     return null;
-  }
-
-  if (loading) {
-    return <ActivityIndicator />;
   }
 
   return (
@@ -77,33 +90,52 @@ export default function App() {
       initialMetrics={initialWindowMetrics}
       onLayout={onLayoutRootView}
     >
-      <SafeAreaView style={{ backgroundColor: '#04070E', flex: 1 }}>
-        <ScrollView>
-          <ReStyleThemeProvider>
-            <Box flex={1} backgroundColor="primary">
-              <Days days={days} onPress={onPress} selectedDay={selectedDay} />
+      <ReStyleThemeProvider>
+        <SafeAreaView style={{ backgroundColor: '#04070E', flex: 1 }}>
+          <StatusBar style="light" />
 
-              <Box height={30} />
-              <MapText
-                title={title}
-                description={description}
-                color={color}
-                date={lastUpdatedDate}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="white"
               />
-
-              <Box height={30} />
-
-              {!!hours && <TimelineHours hours={hours} />}
-
-              <Box height={30} />
-
-              <Box flex={0.6} alignItems="center">
-                <SvgFrance color={color} />
-              </Box>
+            }
+          >
+            <Box flex={1} backgroundColor="primary">
+              {loading ? (
+                <Box backgroundColor="primary" justifyContent="center" flex={1}>
+                  <ActivityIndicator size="large" />
+                </Box>
+              ) : (
+                <>
+                  <Box height={20} />
+                  <Days
+                    days={days}
+                    onPress={onPress}
+                    selectedDay={selectedDay}
+                  />
+                  <Box height={30} />
+                  <MapText
+                    title={title}
+                    description={description}
+                    color={color}
+                    date={lastUpdatedDate}
+                  />
+                  <Box height={30} />
+                  {!!hours && <TimelineHours hours={hours} />}
+                  <Box height={30} />
+                  <Box flex={0.6} alignItems="center">
+                    <SvgFrance color={color} />
+                  </Box>
+                </>
+              )}
             </Box>
-          </ReStyleThemeProvider>
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
+      </ReStyleThemeProvider>
     </SafeAreaProvider>
   );
 }
