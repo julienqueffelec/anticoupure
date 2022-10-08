@@ -26,8 +26,7 @@ module.exports = function (api) {
             '@components': './components',
             '@service': './service',
             '@lib': './lib',
-            '@navigation': './navigation',
-            '@firebaseLocal': './firebase'
+            '@navigation': './navigation'
           }
         }
       ]

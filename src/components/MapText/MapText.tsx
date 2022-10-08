@@ -1,8 +1,7 @@
 import { formatDistance } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import React from 'react';
-
-import { Box, Text } from '@styles/theme';
+import { Box, Text } from 'styles/theme';
 
 interface MapTextProps {
   title: string;

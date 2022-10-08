@@ -29,17 +29,16 @@
     "importsNotUsedAsValues": "error",
     "baseUrl": "./",
     "paths": {
-      "@hooks/*": ["hooks/*"],
-      "@contexts/*": ["contexts/*"],
-      "@lib/*": ["lib/*"],
-      "@screens/*": ["screens/*"],
-      "@components/*": ["src/components/*"],
-      "@styles/*": ["styles/*"],
-      "@assets/*": ["assets/*"],
-      "@constants/*": ["constants/*"],
-      "types/*": ["types/*"],
-      "@service/*": ["service/*"],
-      "@navigation/*": ["navigation/*"]
+      "@hooks/*": ["./src/hooks/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@screens/*": ["./src/screens/*"],
+      "@components/*": ["./src/components/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@service/*": ["./src/service/*"],
+      "@navigation/*": ["./src/navigation/*"]
     }
   },
   "exclude": [

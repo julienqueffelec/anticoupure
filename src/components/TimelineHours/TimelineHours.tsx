@@ -1,8 +1,7 @@
 import { useTheme } from '@shopify/restyle';
 import React from 'react';
 import { View } from 'react-native';
-
-import { Text } from '@styles/theme';
+import { Text } from 'styles/theme';
 
 const hours = [
   { hour: 0, status: 1 },

@@ -1,21 +1,26 @@
-import SvgFrance from '@assets/france';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   SafeAreaProvider,
-  initialWindowMetrics
+  initialWindowMetrics,
+  SafeAreaView
 } from 'react-native-safe-area-context';
-import { MapText } from 'src/components/MapText/MapText';
-import TimelineHours from 'src/components/TimelineHours/TimelineHours';
-import { getComputedCurrentSituation } from 'utils/computedCurrentSituation';
+import type { EcoWatt } from 'types/api.types';
 import { getColorAndLabels } from 'utils/getColorAndLabels';
+import { getDays } from 'utils/getDays';
 
-import { Box, ReStyleThemeProvider } from '@styles/theme';
-
-import ecowatt from './file/ecowatt.json';
+import SvgFrance from './assets/france';
+import { Days } from './src/components/Days/Days';
+import { MapText } from './src/components/MapText/MapText';
+import TimelineHours from './src/components/TimelineHours/TimelineHours';
+import { Box, ReStyleThemeProvider, useTheme } from './styles/theme';
+import { getComputedCurrentSituation } from './utils/computedCurrentSituation';
 
 export default function App() {
+  const theme = useTheme();
+  const [selectedDay, setSelectedDay] = useState(0);
+  const [ecowatt, setEcowatt] = useState<EcoWatt>();
   const [fontsLoaded] = useFonts({
     'Nunito-Black': require('./assets/fonts/Nunito-Black.ttf'),
     'Nunito-Regular': require('./assets/fonts/Nunito-Regular.ttf')
@@ -29,6 +34,18 @@ export default function App() {
     prepare();
   }, []);
 
+  useEffect(() => {
+    fetch(
+      'https://https://api.github.com/repos/julienqueffelec/anticoupure/contents'
+    ).then(response => {
+      console.log('response', response);
+      response.json().then(data => {
+        console.log('data', data);
+        setEcowatt(data);
+      });
+    });
+  }, []);
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -38,7 +55,12 @@ export default function App() {
   const { title, description, color } = getColorAndLabels(
     computedCurrentSituation
   );
-  const lastUpdatedDate = ecowatt.signals[0]?.GenerationFichier;
+  const lastUpdatedDate = ecowatt?.signals[0]?.GenerationFichier;
+  const days = ecowatt && getDays(ecowatt);
+
+  const onPress = (selectedDay: number) => {
+    setSelectedDay(selectedDay);
+  };
 
   if (!fontsLoaded) {
     return null;
@@ -49,22 +71,25 @@ export default function App() {
       initialMetrics={initialWindowMetrics}
       onLayout={onLayoutRootView}
     >
-      <ReStyleThemeProvider>
-        <Box flex={1} backgroundColor="primary">
-          <MapText
-            title={title}
-            description={description}
-            color={color}
-            date={lastUpdatedDate}
-          />
+      <SafeAreaView style={{ backgroundColor: theme.colors.primary, flex: 1 }}>
+        <ReStyleThemeProvider>
+          <Box flex={1} backgroundColor="primary">
+            <Days days={days} onPress={onPress} selectedDay={selectedDay} />
+            <MapText
+              title={title}
+              description={description}
+              color={color}
+              date={lastUpdatedDate}
+            />
 
-          <TimelineHours />
+            <TimelineHours />
 
-          <Box flex={0.6} alignItems="center">
-            <SvgFrance color={color} />
+            <Box flex={0.6} alignItems="center">
+              <SvgFrance color={color} />
+            </Box>
           </Box>
-        </Box>
-      </ReStyleThemeProvider>
+        </ReStyleThemeProvider>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
