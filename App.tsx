@@ -6,11 +6,11 @@ import {
   SafeAreaProvider,
   initialWindowMetrics
 } from 'react-native-safe-area-context';
+import { MapText } from 'src/components/MapText/MapText';
+import TimelineHours from 'src/components/TimelineHours/TimelineHours';
 import { getComputedCurrentSituation } from 'utils/computedCurrentSituation';
 import { getColorAndLabels } from 'utils/getColorAndLabels';
 
-import { MapText } from '@components/MapText/MapText';
-import TimelineHours from '@components/TimelineHours/TimelineHours';
 import { Box, ReStyleThemeProvider } from '@styles/theme';
 
 import ecowatt from './file/ecowatt.json';

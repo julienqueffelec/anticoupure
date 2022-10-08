@@ -33,7 +33,7 @@
       "@contexts/*": ["contexts/*"],
       "@lib/*": ["lib/*"],
       "@screens/*": ["screens/*"],
-      "@components/*": ["components/*"],
+      "@components/*": ["src/components/*"],
       "@styles/*": ["styles/*"],
       "@assets/*": ["assets/*"],
       "@constants/*": ["constants/*"],
