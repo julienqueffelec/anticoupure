@@ -1,6 +1,7 @@
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView } from 'react-native';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -13,13 +14,12 @@ import { getDays } from 'utils/getDays';
 import SvgFrance from './assets/france';
 import { Days } from './src/components/Days/Days';
 import { MapText } from './src/components/MapText/MapText';
-import TimelineHours from './src/components/TimelineHours/TimelineHours';
-import { Box, ReStyleThemeProvider, useTheme } from './styles/theme';
-import { getComputedCurrentSituation } from './utils/computedCurrentSituation';
+import { TimelineHours } from './src/components/TimelineHours/TimelineHours';
+import { Box, ReStyleThemeProvider } from './styles/theme';
 
 export default function App() {
-  const theme = useTheme();
   const [selectedDay, setSelectedDay] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [ecowatt, setEcowatt] = useState<EcoWatt>();
   const [fontsLoaded] = useFonts({
     'Nunito-Black': require('./assets/fonts/Nunito-Black.ttf'),
@@ -35,14 +35,14 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     fetch(
-      'https://https://api.github.com/repos/julienqueffelec/anticoupure/contents'
+      'https://raw.githubusercontent.com/julienqueffelec/anticoupure/main/ecowatt.json'
     ).then(response => {
-      console.log('response', response);
       response.json().then(data => {
-        console.log('data', data);
         setEcowatt(data);
       });
+      setLoading(false);
     });
   }, []);
 
@@ -51,12 +51,14 @@ export default function App() {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
-  const computedCurrentSituation = getComputedCurrentSituation(ecowatt);
+  const computedCurrentSituation =
+    ecowatt && ecowatt.signals[selectedDay]?.dvalue;
   const { title, description, color } = getColorAndLabels(
     computedCurrentSituation
   );
-  const lastUpdatedDate = ecowatt?.signals[0]?.GenerationFichier;
+  const lastUpdatedDate = ecowatt?.signals[selectedDay]?.GenerationFichier;
   const days = ecowatt && getDays(ecowatt);
+  const hours = ecowatt && ecowatt?.signals[selectedDay]?.values;
 
   const onPress = (selectedDay: number) => {
     setSelectedDay(selectedDay);
@@ -66,29 +68,41 @@ export default function App() {
     return null;
   }
 
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+
   return (
     <SafeAreaProvider
       initialMetrics={initialWindowMetrics}
       onLayout={onLayoutRootView}
     >
-      <SafeAreaView style={{ backgroundColor: theme.colors.primary, flex: 1 }}>
-        <ReStyleThemeProvider>
-          <Box flex={1} backgroundColor="primary">
-            <Days days={days} onPress={onPress} selectedDay={selectedDay} />
-            <MapText
-              title={title}
-              description={description}
-              color={color}
-              date={lastUpdatedDate}
-            />
+      <SafeAreaView style={{ backgroundColor: '#04070E', flex: 1 }}>
+        <ScrollView>
+          <ReStyleThemeProvider>
+            <Box flex={1} backgroundColor="primary">
+              <Days days={days} onPress={onPress} selectedDay={selectedDay} />
 
-            <TimelineHours />
+              <Box height={30} />
+              <MapText
+                title={title}
+                description={description}
+                color={color}
+                date={lastUpdatedDate}
+              />
 
-            <Box flex={0.6} alignItems="center">
-              <SvgFrance color={color} />
+              <Box height={30} />
+
+              {!!hours && <TimelineHours hours={hours} />}
+
+              <Box height={30} />
+
+              <Box flex={0.6} alignItems="center">
+                <SvgFrance color={color} />
+              </Box>
             </Box>
-          </Box>
-        </ReStyleThemeProvider>
+          </ReStyleThemeProvider>
+        </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
   );

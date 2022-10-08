@@ -17,12 +17,16 @@ export const MapText: React.FC<MapTextProps> = ({
   date
 }) => (
   <Box flex={0.4} justifyContent="center" alignItems="center">
-    <Text variant="title1" color={color}>
+    <Text variant="title2" color={color} textAlign="center">
       {title}
     </Text>
-    <Text variant="title1" color={color}>
-      {description}
-    </Text>
+    <Box height={5} />
+    <Box height={50} justifyContent="center" alignItems="center">
+      <Text variant="title3" color={color} textAlign="center">
+        {description}
+      </Text>
+    </Box>
+    <Box height={5} />
     <Text variant="body" color={color} style={{ opacity: 0.8 }}>
       Dernière mise à jour il y a{' '}
       {!!date &&

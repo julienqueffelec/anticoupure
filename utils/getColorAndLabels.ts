@@ -1,5 +1,5 @@
 export const getColorAndLabels = (
-  number: number
+  number: number | undefined
 ): { title: string; description: string; color: string } => {
   if (number === 3) {
     return {

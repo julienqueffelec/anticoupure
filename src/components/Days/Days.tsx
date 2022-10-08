@@ -4,7 +4,7 @@ import { Box } from 'styles/theme';
 import { Day } from '../../../src/components/Day/Day';
 
 interface DaysProps {
-  days: string[];
+  days: string[] | undefined;
   selectedDay: number;
   onPress: (e: number) => void;
 }
